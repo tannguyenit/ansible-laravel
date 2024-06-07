@@ -1,0 +1,67 @@
+---
+- name: Update The Operating System
+  apt:
+    update_cache: yes
+    force_apt_get: yes
+    cache_valid_time: 3600
+
+- name: Install required packages
+  apt:
+    name:
+      - gnupg
+      - vim
+    state: latest
+- name: Check if Redis repo is added
+  stat:
+    path: /etc/apt/sources.list.d/redis.list
+  register: redis_repo_status
+
+- name: Set up Redis repo
+  when: not redis_repo_status.stat.exists
+  shell: |
+    curl https://packages.redis.io/gpg | sudo apt-key add -
+    echo "deb https://packages.redis.io/deb $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/redis.list
+
+- name: Check if Redis server is running
+  systemd:
+    name: redis-server
+  register: redis_service_status
+
+- set_fact: 
+    redis_active: "{{ redis_service_status.status.ActiveState == 'active' }}"
+
+- name: Install redis
+  apt:
+    name: redis-server
+    update_cache: yes
+    state: present
+  notify: Enable Redis
+  when: not redis_active
+
+- name: Generate redis password
+  shell: |
+      echo "{{ app_name }}" | sha1sum | awk '{print $1}'
+  register: password_generate
+  when: not redis_active
+
+- name: Set redis_password
+  set_fact:
+    redis_password: "{{ password_generate.stdout }}"
+  when: not redis_active
+
+
+- name: Redis password, Please store and use in the furture
+  debug: msg={{ redis_password }}
+  when: not redis_active
+
+- name: Check config file exists
+  stat:
+    path: /etc/redis.conf
+  register: config_check
+
+- name: Update redis configuration file
+  template:
+    src: redis.conf.j2
+    dest: /etc/redis.conf
+  when: not config_check.stat.exists
+  notify: Restart Redis

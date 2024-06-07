@@ -1,0 +1,35 @@
+---
+- name: Create group dev
+  group:
+    name: "{{ user_group }}"
+    state: present
+
+- name: Create user dev
+  user:
+    name: "{{ user_name }}"
+    group: "{{ user_group }}"
+    password: "{{ user_password }}"
+    create_home: yes
+    shell: /bin/bash
+    state: present
+
+- name: Add current user to dev group
+  user:
+    name: "{{ ansible_user }}"
+    groups: "{{ user_group }}"
+    append: yes
+
+- name: Add dev user to docker group
+  user:
+    name: "{{ user_name }}"
+    groups: docker
+    append: yes
+
+- name: Set permission /var/www/html for dev group
+  file:
+    path: /var/www/html
+    owner: "{{ user_name }}"
+    group: "{{ user_group }}"
+    mode: '0775' 
+    recurse: yes
+    state: directory

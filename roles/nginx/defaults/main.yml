@@ -1,0 +1,3 @@
+---
+nginx_port: 80
+nginx_force_update_config: false

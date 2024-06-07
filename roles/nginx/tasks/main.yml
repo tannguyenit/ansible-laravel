@@ -1,0 +1,36 @@
+---
+- name: Update The Operating System
+  apt:
+    update_cache: yes
+
+- name: Install Nginx
+  apt:
+    name: nginx
+    state: present
+  become: true
+
+- name: Enable Nginx service
+  systemd:
+    name: nginx
+    daemon_reload: yes
+    enabled: yes
+    state: started
+
+- name: Start Nginx Service
+  service:
+    name: nginx
+    state: started
+    enabled: yes
+  become: true
+
+- name: Check config file exists
+  stat:
+    path: /etc/nginx/conf.d/app.conf
+  register: config_check
+
+- name: Config php application
+  template:
+    src: app.conf.j2
+    dest: /etc/nginx/conf.d/app.conf
+  when: nginx_force_update_config or not config_check.stat.exists
+  notify: Reload Nginx

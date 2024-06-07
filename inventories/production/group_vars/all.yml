@@ -1,0 +1,8 @@
+---
+server_name: "example.com"
+server_root: "/var/www/html"
+upstream_server: "127.0.0.1:9000"
+app_name: "jpxpress"
+bashrc: /home/ec2-user/.bashrc
+letsencrypt_email: account@gmail.com
+letsencrypt_staging: false

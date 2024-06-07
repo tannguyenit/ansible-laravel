@@ -1,0 +1,21 @@
+---
+- name: Run install webserver playbook
+  import_playbook: webserver.yml
+
+- name: Run install cache playbook
+  import_playbook: cache.yml
+
+- name: Run install docker playbook
+  import_playbook: docker.yml
+
+- name: Setup dev user
+  import_playbook: user.yml
+
+- name: Run docker application
+  import_playbook: application.yml
+
+- name: Run install ssl playbook
+  import_playbook: ssl.yml
+
+- name: Run install mysql playbook
+  import_playbook: mysql.yml

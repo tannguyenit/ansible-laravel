@@ -1,0 +1,5 @@
+---
+mysql_root_password: "{{ mysql_root_password }}"
+db_user: "{{ db_user }}"
+db_password: "{{ db_password }}"
+db_database: "{{ db_database }}"

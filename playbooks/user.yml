@@ -1,0 +1,7 @@
+---
+- name: Setup user
+  hosts: main
+  become: true
+
+  roles:
+    - users

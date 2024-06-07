@@ -1,0 +1,3 @@
+.vscode/
+inventories/dev/group_vars/all.yml
+.DS_Store

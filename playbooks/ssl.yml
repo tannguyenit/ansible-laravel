@@ -1,0 +1,7 @@
+---
+- name: Setup SSL 
+  hosts: main
+  become: true
+
+  roles:
+    - cerbot

@@ -1,0 +1,11 @@
+---
+# - name: Save our destination host
+#   set_fact: dest_host="{{ ansible_host }}"
+
+# - name: Get user from local ssh config
+#   local_action: shell ssh -G {{ dest_host }} | awk '/^user /{ print $2 }'
+#   changed_when: false
+#   register: ssh_user
+
+- name: Print forced ansible_user if defined or username from ssh config otherwize
+  debug: msg="Ansible will connect with {{ ansible_env.SUDO_USER }}"

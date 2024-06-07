@@ -1,0 +1,29 @@
+---
+- name: Run application
+  hosts: main
+  gather_facts: false
+
+  tasks:
+    - name: Ensure PHP 8.0 FPM Dockerfile is created
+      template:
+        src: "{{ playbook_dir }}/../files/Dockerfile"
+        dest: /var/www/html/Dockerfile
+        mode: "0755"
+
+    - name: Build docker image
+      community.docker.docker_image:
+        build:
+          path: /var/www/html/
+        name: demo-application
+        tag: v1
+        source: build
+
+    - name: Start docker container
+      community.docker.docker_container:
+        name: app
+        image: demo-application:v1
+        recreate: true
+        state: started
+        detach: true
+        ports:
+          - "127.0.0.1:9000:9000"

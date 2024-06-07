@@ -1,0 +1,22 @@
+---
+server_name: "api.example.dev"
+server_root: "/var/www/html/api"
+upstream_server: "127.0.0.1:9000"
+
+app_name: "my_app"
+bashrc: /home/ec2-user/.bashrc
+
+# Letsencrypt
+letsencrypt_email: letsencrypt_email
+letsencrypt_staging: false
+nginx_force_update_config: true
+
+# User
+user_name: dev
+user_group: dev
+user_password: your_desired_password_with_encrypt
+
+mysql_root_password: 'your_root_desired_password'
+db_user: dev
+db_password: 'your_desired_password'
+db_database: dev_db

@@ -1,0 +1,7 @@
+---
+- name: Install MySQL and create dev user
+  hosts: main
+  become: true
+
+  roles:
+    - mysql
